@@ -159,6 +159,10 @@ class ZhDate():
         
         return ZhDate(lunar_year, lunar_month, lunar_day, leap_month)
 
+    @staticmethod
+    def today():
+        return ZhDate.from_datetime(datetime.now())
+
     def __days_passed(self):
         """私有方法，计算当前农历日期和当年农历新年之间的天数差值
         
@@ -184,9 +188,12 @@ class ZhDate():
             str -- 标准格式农历日期字符串
         """
         if self.leap_month:
-            return f"{self.lunar_year}年闰{self.lunar_month}月{self.lunar_day}日"
+            return f"农历{self.lunar_year}年闰{self.lunar_month}月{self.lunar_day}日"
         else:
-            return f"{self.lunar_year}年{self.lunar_month}月{self.lunar_day}日"
+            return f"农历{self.lunar_year}年{self.lunar_month}月{self.lunar_day}日"
+
+    def __repr__(self):
+        return self.__str__()
 
     def __eq__(self, another):
         if not isinstance(another, ZhDate):
