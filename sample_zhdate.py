@@ -24,4 +24,5 @@ if __name__ == '__main__':
     # 加法支持
     new_zhdate4 = ZhDate(2019, 1, 1) + 30 # 加整数返回相隔天数以后的新农历对象
 
-    print(ZhDate.from_datetime(datetime.now()) + 365)
+    print(ZhDate(1900, 9, 1, False).chinese())
+    print(ZhDate.today().chinese())

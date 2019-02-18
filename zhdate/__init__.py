@@ -181,6 +181,45 @@ class ZhDate():
 
         return days_passed_month + self.lunar_day - 1
 
+    def chinese(self):
+        ZHNUMS = '零一二三四五六七八九十'
+        zh_year = ''
+        for i in range(0, 4):
+            zh_year += ZHNUMS[int(str(self.lunar_year)[i])]
+        zh_year += '年'
+
+        if self.leap_month:
+            zh_month = '闰'
+        else:
+            zh_month = ''
+
+        if self.lunar_month == 1:
+            zh_month += '正'
+        elif self.lunar_month == 12:
+            zh_month += '腊'
+        elif self.lunar_month <= 10:
+            zh_month += ZHNUMS[self.lunar_month]
+        else:
+            zh_month += f"十{ZHNUMS[self.lunar_month - 10]}"
+        zh_month += '月'
+
+        if self.lunar_day <= 10:
+            zh_day = f'初{ZHNUMS[self.lunar_day]}'
+        elif self.lunar_day < 20:
+            zh_day = f'十{ZHNUMS[self.lunar_day - 10]}'
+        elif self.lunar_day == 20:
+            zh_day = '二十'
+        elif self.lunar_day < 30:
+            zh_day = f'二十{ZHNUMS[self.lunar_day - 20]}'
+        else:
+            zh_day = '三十'
+
+        year_tiandi = ZhDate.__tiandi(self.lunar_year - 1900 + 36) + '年'
+
+        shengxiao = "鼠牛虎兔龙蛇马羊猴鸡狗猪"
+        
+        return f"{zh_year}{zh_month}{zh_day} {year_tiandi} ({shengxiao[(self.lunar_year - 1900) % 12]}年)"
+
     def __str__(self):
         """打印字符串的方法
         
@@ -218,6 +257,17 @@ class ZhDate():
             return (self.to_datetime() - another).days
         else:
             raise TypeError('减法只支持整数，ZhDate, Datetime类型')
+
+
+    '''
+    以下为帮助函数
+    '''
+
+    @staticmethod
+    def __tiandi(anum):
+        tian = '甲乙丙丁戊己庚辛壬癸'
+        di = '子丑寅卯辰巳午未申酉戌亥'
+        return f'{tian[anum % 10]}{di[anum % 12]}'
 
     @staticmethod
     def validate(year, month, day, leap):
