@@ -210,7 +210,7 @@ class ZhDate():
         elif self.lunar_day == 20:
             zh_day = '二十'
         elif self.lunar_day < 30:
-            zh_day = f'二十{ZHNUMS[self.lunar_day - 20]}'
+            zh_day = f'廿{ZHNUMS[self.lunar_day - 20]}'
         else:
             zh_day = '三十'
 
