@@ -2,10 +2,11 @@ import unittest
 from datetime import datetime
 from zhdate import ZhDate
 
+
 class TestZhdate(unittest.TestCase):
     def setUp(self):
         pass
-    
+
     def tearDown(self):
         pass
 

@@ -1,5 +1,5 @@
 from zhdate import ZhDate
-from datetime import datetime, timedelta
+from datetime import datetime
 
 if __name__ == '__main__':
     date1 = ZhDate(2010, 1, 1) # 新建农历 2010年正月初一 的日期对象

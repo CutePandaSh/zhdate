@@ -8,23 +8,20 @@ Author: Wang, Yi (denniswangyi@gmail.com)
 changed: Saturday, 21st January 2023
 by: Eilles Wan (EillesWan@outlook.com)
 '''
-
-
-
 from datetime import datetime, timedelta
 from itertools import accumulate
-from .constants import *
+from .constants import CHINESENEWYEAR, CHINESEYEARCODE
 
 
 class ZhDate():
     def __init__(self, lunar_year, lunar_month, lunar_day, leap_month=False):
         """初始化函数
-        
+
         Arguments:
             lunar_year {int} -- 农历年
             lunar_month {int} -- 农历月份
             lunar_day {int} -- 农历日
-        
+
         Keyword Arguments:
             leap_month {bool} -- 是否是在农历闰月中 (default: {False})
         """
@@ -35,11 +32,13 @@ class ZhDate():
         self.year_code = CHINESEYEARCODE[self.lunar_year - 1900]
         self.newyear = datetime.strptime(CHINESENEWYEAR[self.lunar_year - 1900], '%Y%m%d')
         if not ZhDate.validate(lunar_year, lunar_month, lunar_day, leap_month):
-            raise TypeError('农历日期不支持所谓“{}”，超出农历1900年1月1日至2100年12月29日，或日期不存在'.format(self))
+            raise TypeError(
+                '农历日期不支持所谓“{}”，超出农历1900年1月1日至2100年12月29日，或日期不存在'.format(self)
+            )
 
     def to_datetime(self):
         """农历日期转换称公历日期
-        
+
         Returns:
             datetime -- 当前农历对应的公历日期
         """
@@ -48,10 +47,10 @@ class ZhDate():
     @staticmethod
     def from_datetime(dt):
         """静态方法，从公历日期生成农历日期
-        
+
         Arguments:
             dt {datetime} -- 公历的日期
-        
+
         Returns:
             ZhDate -- 生成的农历日期对象
         """
@@ -81,7 +80,7 @@ class ZhDate():
 
         if (year_code & 0xf) != 0 and month == (year_code & 0xf) + 1:
             leap_month = True
-        
+
         return ZhDate(lunar_year, lunar_month, lunar_day, leap_month)
 
     @staticmethod
@@ -90,16 +89,19 @@ class ZhDate():
 
     def __days_passed(self):
         """私有方法，计算当前农历日期和当年农历新年之间的天数差值
-        
+
         Returns:
             int -- 差值天数
         """
         month_days = ZhDate.decode(self.year_code)
-        month_leap =  self.year_code & 0xf #当前农历年的闰月，为0表示无润叶
+        #当前农历年的闰月，为0表示无润叶
+        month_leap =  self.year_code & 0xf
 
-        if (month_leap == 0) or (self.lunar_month < month_leap): #当年无闰月，或者有闰月但是当前月小于闰月
+        #当年无闰月，或者有闰月但是当前月小于闰月
+        if (month_leap == 0) or (self.lunar_month < month_leap):
             days_passed_month = sum(month_days[:self.lunar_month - 1])
-        elif (not self.leap_month) and (self.lunar_month == month_leap): #当前不是闰月，并且当前月份和闰月相同
+        #当前不是闰月，并且当前月份和闰月相同
+        elif (not self.leap_month) and (self.lunar_month == month_leap):
             days_passed_month = sum(month_days[:self.lunar_month - 1])
         else:
             days_passed_month = sum(month_days[:self.lunar_month])
@@ -124,28 +126,34 @@ class ZhDate():
         elif self.lunar_month <= 10:
             zh_month += ZHNUMS[self.lunar_month]
         else:
-            zh_month += f"十{ZHNUMS[self.lunar_month - 10]}"
+            zh_month += "十{}".format(ZHNUMS[self.lunar_month - 10])
 
         if self.lunar_day <= 10:
-            zh_day = f'初{ZHNUMS[self.lunar_day]}'
+            zh_day = '初{}'.format(ZHNUMS[self.lunar_day])
         elif self.lunar_day < 20:
-            zh_day = f'十{ZHNUMS[self.lunar_day - 10]}'
+            zh_day = '十{}'.format(ZHNUMS[self.lunar_day - 10])
         elif self.lunar_day == 20:
             zh_day = '二十'
         elif self.lunar_day < 30:
-            zh_day = f'廿{ZHNUMS[self.lunar_day - 20]}'
+            zh_day = '廿{}'.format(ZHNUMS[self.lunar_day - 20])
         else:
             zh_day = '三十'
 
         year_tiandi = ZhDate.__tiandi(self.lunar_year - 1900 + 36)
 
         shengxiao = "鼠牛虎兔龙蛇马羊猴鸡狗猪"
-        
-        return "{}年{}月{} {}{}年".format(zh_year,zh_month,zh_day,year_tiandi,shengxiao[(self.lunar_year - 1900) % 12])
+
+        return "{}年{}月{} {}{}年".format(
+            zh_year,
+            zh_month,
+            zh_day,
+            year_tiandi,
+            shengxiao[(self.lunar_year - 1900) % 12]
+        )
 
     def __str__(self):
         """打印字符串的方法
-        
+
         Returns:
             str -- 标准格式农历日期字符串
         """
@@ -178,7 +186,6 @@ class ZhDate():
         else:
             raise TypeError('减法只支持整数，ZhDate, Datetime类型')
 
-
     '''
     以下为帮助函数
     '''
@@ -192,27 +199,27 @@ class ZhDate():
     @staticmethod
     def validate(year, month, day, leap):
         """农历日期校验
-        
+
         Arguments:
             year {int} -- 农历年份
             month {int} -- 农历月份
             day {int} -- 农历日期
             leap {bool} -- 农历是否为闰月日期
-        
+
         Returns:
             bool -- 校验是否通过
         """
         # 年份低于1900，大于2100，或者月份不属于 1-12，或者日期不属于 1-30，返回校验失败
         if not (1900 <= year <= 2100 and 1 <= month <= 12 and 1 <= day <= 30):
             return False
-            
+
         year_code = CHINESEYEARCODE[year - 1900]
 
         # 有闰月标志
         if leap:
             if (year_code & 0xf) != month: # 年度闰月和校验闰月不一致的话，返回校验失败
                 return False
-            elif day == 30: # 如果日期是30的话，直接返回年度代码首位是否为1，即闰月是否为大月
+            elif day == 30:  # 如果日期是30的话，直接返回年度代码首位是否为1，即闰月是否为大月
                 return (year_code >> 16) == 1
             else: # 年度闰月和当前月份相同，日期不为30的情况，返回通过
                 return True
@@ -224,10 +231,10 @@ class ZhDate():
     @staticmethod
     def decode(year_code):
         """解析年度农历代码函数
-        
+
         Arguments:
             year_code {int} -- 从年度代码数组中获取的代码整数
-        
+
         Returns:
             list[int, ] -- 当前年度代码解析以后形成的每月天数数组，已将闰月嵌入对应位置，即有闰月的年份返回的列表长度为13，否则为12
         """
@@ -238,7 +245,7 @@ class ZhDate():
             # 1 这个数只有一位，与任何数进行 按位与 都只能获得其
             # 从后往前第一位，对！是获得这一位
             month_days.insert(0, 30 if (year_code >> i) & 1 else 29)
-        
+
         # 0xf 即 15 即二进制的 1111
         # 所以 1111 与任何数进行 按位与
         # 都将获得其最后四位，对！是获得这最后四位
@@ -246,23 +253,20 @@ class ZhDate():
         # 而首四位表示闰月的天数
         if year_code & 0xf:
             month_days.insert((year_code & 0xf), 30 if year_code >> 16 else 29)
-        
+
         # 返回一个列表
         return month_days
 
     @staticmethod
     def month_days(year):
         """根据年份返回当前农历月份天数list
-        
+
         Arguments:
             year {int} -- 1900到2100的之间的整数
-        
+
         Returns:
             [int] -- 农历年份所对应的农历月份天数列表
         """
         return ZhDate.decode(
             CHINESEYEARCODE[year - 1900]
         )
-
-
-
