@@ -6,7 +6,7 @@ with open('README.md', 'r') as file:
 
 setuptools.setup(
     name='zhdate',
-    version='0.1',
+    version='0.1.1',
     author="PandaWithBeard",
     author_email="9861649@qq.com",
     description="A pachage to convert Chinese Lunar Calendar to datetime",
