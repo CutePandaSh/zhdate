@@ -8,12 +8,17 @@ Author: Wang, Yi (denniswangyi@gmail.com)
 changed: Saturday, 21st January 2023
 by: Eilles Wan (EillesWan@outlook.com)
 '''
+'''
+changed: Tuesday, 14th March 2023
+by: JellyBeanXiewh (https://github.com/JellyBeanXiewh)
+'''
 from datetime import datetime, timedelta
 from itertools import accumulate
+
 from .constants import CHINESENEWYEAR, CHINESEYEARCODE
 
 
-class ZhDate():
+class ZhDate:
     def __init__(self, lunar_year, lunar_month, lunar_day, leap_month=False):
         """初始化函数
 
@@ -56,9 +61,9 @@ class ZhDate():
         """
         lunar_year = dt.year
         # 如果还没有到农历正月初一 农历年份减去1
-        lunar_year -= (datetime.strptime(CHINESENEWYEAR[lunar_year-1900], '%Y%m%d') - dt).total_seconds() > 0
+        lunar_year -= (datetime.strptime(CHINESENEWYEAR[lunar_year - 1900], '%Y%m%d') - dt).total_seconds() > 0
         # 当时农历新年时的日期对象
-        newyear_dt = datetime.strptime(CHINESENEWYEAR[lunar_year-1900], '%Y%m%d')
+        newyear_dt = datetime.strptime(CHINESENEWYEAR[lunar_year - 1900], '%Y%m%d')
         # 查询日期距离当年的春节差了多久
         days_passed = (dt - newyear_dt).days
         # 被查询日期的年份码
@@ -94,13 +99,13 @@ class ZhDate():
             int -- 差值天数
         """
         month_days = self.decode(self.year_code)
-        #当前农历年的闰月，为0表示无润叶
-        month_leap =  self.year_code & 0xf
+        # 当前农历年的闰月，为0表示无润叶
+        month_leap = self.year_code & 0xf
 
-        #当年无闰月，或者有闰月但是当前月小于闰月
+        # 当年无闰月，或者有闰月但是当前月小于闰月
         if (month_leap == 0) or (self.lunar_month < month_leap):
             days_passed_month = sum(month_days[:self.lunar_month - 1])
-        #当前不是闰月，并且当前月份和闰月相同
+        # 当前不是闰月，并且当前月份和闰月相同
         elif (not self.leap_month) and (self.lunar_month == month_leap):
             days_passed_month = sum(month_days[:self.lunar_month - 1])
         else:
@@ -157,7 +162,7 @@ class ZhDate():
         Returns:
             str -- 标准格式农历日期字符串
         """
-        return "农历{}年{}{}月{}日".format(self.lunar_year,"闰" if self.leap_month else "",self.lunar_month,self.lunar_day)
+        return "农历{}年{}{}月{}日".format(self.lunar_year, "闰" if self.leap_month else "", self.lunar_month, self.lunar_day)
 
     def __repr__(self):
         return self.__str__()
@@ -194,7 +199,7 @@ class ZhDate():
     def __tiandi(anum):
         tian = '甲乙丙丁戊己庚辛壬癸'
         di = '子丑寅卯辰巳午未申酉戌亥'
-        return '{}{}'.format(tian[anum % 10],di[anum % 12])
+        return '{}{}'.format(tian[anum % 10], di[anum % 12])
 
     @staticmethod
     def validate(year, month, day, leap):
@@ -217,15 +222,15 @@ class ZhDate():
 
         # 有闰月标志
         if leap:
-            if (year_code & 0xf) != month: # 年度闰月和校验闰月不一致的话，返回校验失败
+            if (year_code & 0xf) != month:  # 年度闰月和校验闰月不一致的话，返回校验失败
                 return False
             elif day == 30:  # 如果日期是30的话，直接返回年度代码首位是否为1，即闰月是否为大月
                 return (year_code >> 16) == 1
-            else: # 年度闰月和当前月份相同，日期不为30的情况，返回通过
+            else:  # 年度闰月和当前月份相同，日期不为30的情况，返回通过
                 return True
-        elif day <= 29: # 非闰月，并且日期小于等于29，返回通过
+        elif day <= 29:  # 非闰月，并且日期小于等于29，返回通过
             return True
-        else: # 非闰月日期为30，返回年度代码中的月份位是否为1，即是否为大月
+        else:  # 非闰月日期为30，返回年度代码中的月份位是否为1，即是否为大月
             return ((year_code >> (12 - month) + 4) & 1) == 1
 
     @staticmethod
