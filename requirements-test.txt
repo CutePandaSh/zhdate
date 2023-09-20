@@ -1,0 +1,3 @@
+flake8==3.9.0
+importlib-metadata==4.13.0
+pytest==6.0.1
