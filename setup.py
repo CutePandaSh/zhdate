@@ -1,15 +1,15 @@
 # -*- coding=utf-8 -*-
 
-import setuptools
-
-'''
+"""
 Author       : PandaWithBeard
 Date         : 2023-01-21 02:30:41
 LastEditors  : PandaWithBeard
 LastEditTime : 2023-01-21 02:30:41
 FilePath     : /zhdate/setup.py
 Description  :
-'''
+"""
+
+import setuptools
 
 with open('README.md', 'r') as file:
     long_description = file.read()
