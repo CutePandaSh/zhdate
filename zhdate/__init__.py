@@ -64,6 +64,8 @@ class ZhDate:
         newyear_dt = datetime.strptime(CHINESENEWYEAR[lunar_year-1900], '%Y%m%d')
         # 如果还没有到农历正月初一 农历年份减去1
         lunar_year -= (newyear_dt - dt).total_seconds() > 0
+        # 更正当时农历新年时的日期对象
+        newyear_dt = datetime.strptime(CHINESENEWYEAR[lunar_year-1900], '%Y%m%d')
         # 查询日期距离当年的春节差了多久
         days_passed = (dt - newyear_dt).days
         # 被查询日期的年份码
