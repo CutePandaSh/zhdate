@@ -1,3 +1,5 @@
+# -*- coding=utf-8 -*-
+
 import unittest
 from datetime import datetime
 from zhdate import ZhDate
@@ -60,6 +62,7 @@ class TestZhdate(unittest.TestCase):
             ((1903, 5, 17), datetime(1903, 6, 12)),
             ((1903, 5, 17, True), datetime(1903, 7, 11)),
             ((1900, 1, 20), datetime(1900, 2, 19)),
+            ((1900, 12, 30), datetime(1901, 2, 18)),
             ((2050, 1, 28), datetime(2050, 2, 19)),
             ((2050, 3, 30, True), datetime(2050, 5, 20)),
             ((1900, 1, 1), datetime(1900, 1, 31)),

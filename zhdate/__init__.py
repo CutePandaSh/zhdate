@@ -1,17 +1,17 @@
-'''
--*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+
+"""
 File: zhdate.py
 File Created: Sunday, 17th February 2019 4:58:02 pm
 Author: Wang, Yi (denniswangyi@gmail.com)
-'''
-'''
+-----
 changed: Saturday, 21st January 2023
 by: Eilles Wan (EillesWan@outlook.com)
-'''
-'''
+-----
 changed: Tuesday, 14th March 2023
 by: JellyBeanXiewh (https://github.com/JellyBeanXiewh)
-'''
+"""
+
 from datetime import datetime, timedelta
 from itertools import accumulate
 
@@ -60,10 +60,12 @@ class ZhDate:
             ZhDate -- 生成的农历日期对象
         """
         lunar_year = dt.year
-        # 如果还没有到农历正月初一 农历年份减去1
-        lunar_year -= (datetime.strptime(CHINESENEWYEAR[lunar_year - 1900], '%Y%m%d') - dt).total_seconds() > 0
         # 当时农历新年时的日期对象
-        newyear_dt = datetime.strptime(CHINESENEWYEAR[lunar_year - 1900], '%Y%m%d')
+        newyear_dt = datetime.strptime(CHINESENEWYEAR[lunar_year-1900], '%Y%m%d')
+        # 如果还没有到农历正月初一 农历年份减去1
+        lunar_year -= (newyear_dt - dt).total_seconds() > 0
+        # 更正当时农历新年时的日期对象
+        newyear_dt = datetime.strptime(CHINESENEWYEAR[lunar_year-1900], '%Y%m%d')
         # 查询日期距离当年的春节差了多久
         days_passed = (dt - newyear_dt).days
         # 被查询日期的年份码
@@ -71,6 +73,8 @@ class ZhDate:
         # 取得本年的月份列表
         month_days = cls.decode(year_code)
 
+        month = 0
+        lunar_day = 0
         for pos, days in enumerate(accumulate(month_days)):
             if days_passed + 1 <= days:
                 month = pos + 1
@@ -162,7 +166,11 @@ class ZhDate:
         Returns:
             str -- 标准格式农历日期字符串
         """
-        return "农历{}年{}{}月{}日".format(self.lunar_year, "闰" if self.leap_month else "", self.lunar_month, self.lunar_day)
+        return "农历{}年{}{}月{}日".format(
+            self.lunar_year, "闰" if self.leap_month else "",
+            self.lunar_month,
+            self.lunar_day
+        )
 
     def __repr__(self):
         return self.__str__()
