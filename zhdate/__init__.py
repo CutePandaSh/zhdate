@@ -3,15 +3,14 @@
 File: zhdate.py
 File Created: Sunday, 17th February 2019 4:58:02 pm
 Author: Wang, Yi (denniswangyi@gmail.com)
-'''
-'''
+-----
 changed: Saturday, 21st January 2023
 by: Eilles Wan (EillesWan@outlook.com)
-'''
-'''
+-----
 changed: Tuesday, 14th March 2023
 by: JellyBeanXiewh (https://github.com/JellyBeanXiewh)
 '''
+
 from datetime import datetime, timedelta
 from itertools import accumulate
 
@@ -61,7 +60,12 @@ class ZhDate:
         """
         lunar_year = dt.year
         # 如果还没有到农历正月初一 农历年份减去1
-        lunar_year -= (datetime.strptime(CHINESENEWYEAR[lunar_year - 1900], '%Y%m%d') - dt).total_seconds() > 0
+        lunar_year -= (
+            datetime.strptime(
+                CHINESENEWYEAR[lunar_year - 1900],
+                '%Y%m%d'
+            ) - dt
+        ).total_seconds() > 0
         # 当时农历新年时的日期对象
         newyear_dt = datetime.strptime(CHINESENEWYEAR[lunar_year - 1900], '%Y%m%d')
         # 查询日期距离当年的春节差了多久
