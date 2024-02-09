@@ -1,3 +1,11 @@
+"""
+-*- coding: utf-8 -*-
+File: main.py
+File Created: Friday, 2nd February 2024
+by: Eilles Wan (EillesWan@outlook.com)
+Original Author: Wang, Yi (denniswangyi@gmail.com)
+"""
+
 from datetime import datetime, timedelta
 from itertools import accumulate
 from .constants import LUNARNEWYEAR, LUNARYEARCODE
