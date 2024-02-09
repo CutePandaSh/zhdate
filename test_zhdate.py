@@ -34,7 +34,7 @@ class TestZhdate(unittest.TestCase):
             (19168, [29, 30, 29, 29, 30, 29, 30, 29, 30, 30, 30, 29]),
             (21717, [29, 30, 29, 30, 29, 29, 30, 29, 29, 30, 30, 29, 30]),
             (91476, [29, 30, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30]),
-            (119381, [30, 30, 29, 30, 29, 30, 29, 30, 29, 29, 30, 29, 30])
+            (119381, [30, 30, 29, 30, 29, 30, 29, 30, 29, 29, 30, 29, 30]),
         ]
 
         for case in test_cases:
@@ -48,7 +48,7 @@ class TestZhdate(unittest.TestCase):
             ((1900, 1, 20), datetime(1900, 2, 19)),
             ((2050, 1, 28), datetime(2050, 2, 19)),
             ((2050, 3, 30, True), datetime(2050, 5, 20)),
-            ((1900, 1, 1), datetime(1900, 1, 31))
+            ((1900, 1, 1), datetime(1900, 1, 31)),
         ]
 
         for case in test_cases:
@@ -72,7 +72,7 @@ class TestZhdate(unittest.TestCase):
         test_cases = [
             (ZhDate(2019, 1, 1), ZhDate(2018, 1, 1), 354),
             (ZhDate(2019, 1, 1), 354, ZhDate(2018, 1, 1)),
-            (ZhDate(2019, 1, 1), datetime(2018, 2, 16), 354)
+            (ZhDate(2019, 1, 1), datetime(2018, 2, 16), 354),
         ]
 
         for case in test_cases:
