@@ -5,7 +5,7 @@ File Created: Saturday, 21st January 2023 01:42 am
 Author: Eilles Wan (EillesWan@outlook.com)
 '''
 
-CHINESEYEARCODE = [
+LUNARYEARCODE = [
         19416,
         19168,  42352,  21717,  53856,  55632,  91476,  22176,  39632,
         21970,  19168,  42422,  42192,  53840, 119381,  46400,  54944,
@@ -47,7 +47,7 @@ CHINESEYEARCODE = [
 
 '''
 
-CHINESENEWYEAR = [
+LUNARNEWYEAR = [
         '19000131',
         '19010219', '19020208', '19030129', '19040216', '19050204',
         '19060125', '19070213', '19080202', '19090122', '19100210',
