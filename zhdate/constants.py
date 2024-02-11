@@ -5,6 +5,27 @@ File Created: Saturday, 21st January 2023 01:42 am
 Author: Eilles Wan (EillesWan@outlook.com)
 '''
 
+
+ZHNUMS = "〇一二三四五六七八九十"
+"""
+表示日期的汉字数字
+"""
+
+SHENGXIAO = "鼠牛虎兔龙蛇马羊猴鸡狗猪"
+"""
+中国的十二生肖
+"""
+
+TIANGAN = "甲乙丙丁戊己庚辛壬癸"
+"""
+十天干
+"""
+
+DIZHI = "子丑寅卯辰巳午未申酉戌亥"
+"""
+十二地支
+"""
+
 LUNARYEARCODE = [
         19416,
         19168,  42352,  21717,  53856,  55632,  91476,  22176,  39632,

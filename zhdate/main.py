@@ -8,7 +8,7 @@ Original Author: Wang, Yi (denniswangyi@gmail.com)
 
 from datetime import datetime, timedelta
 from itertools import accumulate
-from .constants import LUNARNEWYEAR, LUNARYEARCODE
+from .constants import LUNARNEWYEAR, LUNARYEARCODE, ZHNUMS, SHENGXIAO, TIANGAN, DIZHI
 
 
 class ZhDate:
@@ -44,9 +44,9 @@ class ZhDate:
         """
         return self.newyear + timedelta(days=self.__days_passed())
 
-    @staticmethod
-    def from_datetime(dt):
-        """静态方法，从公历日期生成农历日期
+    @classmethod
+    def from_datetime(cls, dt):
+        """类方法，从公历日期生成农历日期
 
         Arguments:
             dt {datetime} -- 公历的日期
@@ -66,7 +66,7 @@ class ZhDate:
         # 被查询日期的年份码
         year_code = LUNARYEARCODE[lunar_year - 1900]
         # 取得本年的月份列表
-        month_days = ZhDate.decode(year_code)
+        month_days = cls.decode(year_code)
 
         for pos, days in enumerate(accumulate(month_days)):
             if days_passed + 1 <= days:
@@ -83,11 +83,16 @@ class ZhDate:
         if (year_code & 0xF) != 0 and month == (year_code & 0xF) + 1:
             leap_month = True
 
-        return ZhDate(lunar_year, lunar_month, lunar_day, leap_month)
+        return cls(lunar_year, lunar_month, lunar_day, leap_month)
 
-    @staticmethod
-    def today():
-        return ZhDate.from_datetime(datetime.now())
+    @classmethod
+    def today(cls):
+        """类方法，返回今日的农历日期
+
+        Returns:
+            ZhDate -- 生成的今日农历日期对象
+        """
+        return cls.from_datetime(datetime.now())
 
     def __days_passed(self):
         """私有方法，计算当前农历日期和当年农历新年之间的天数差值
@@ -111,7 +116,6 @@ class ZhDate:
         return days_passed_month + self.lunar_day - 1
 
     def chinese(self):
-        ZHNUMS = "〇一二三四五六七八九十"
         zh_year = ""
         for i in range(0, 4):
             zh_year += ZHNUMS[int(str(self.lunar_year)[i])]
@@ -143,14 +147,12 @@ class ZhDate:
 
         year_tiandi = ZhDate.__tiandi(self.lunar_year - 1900 + 36)
 
-        shengxiao = "鼠牛虎兔龙蛇马羊猴鸡狗猪"
-
         return "{}年{}月{} {}{}年".format(
             zh_year,
             zh_month,
             zh_day,
             year_tiandi,
-            shengxiao[(self.lunar_year - 1900) % 12],
+            SHENGXIAO[(self.lunar_year - 1900) % 12],
         )
 
     def __str__(self):
@@ -165,6 +167,19 @@ class ZhDate:
             self.lunar_month,
             self.lunar_day,
         )
+
+    def __format__(self, __format_spec: str) -> str:
+        """格式化打印字符串的方法
+
+        Returns:
+            str -- 指定格式的农历日期字符串
+        """
+        # 我在这里思考了一下，要不要再加一个参数用来指定年月日的输出顺序
+        # 然后突然想到，哦，我在做的是农历的日期库
+        # 农历的日期库调什么年月日的顺序，天下农历是一家啊！
+        # 咱华夏文明才是独出农历啊！更何况，算上汉语文化圈，也都是这个顺序
+        # 没得改没得改，就是这个顺序，要什么年月日的输出顺序嘛
+        return self.__str__().__format__(__format_spec)
 
     def __repr__(self):
         return self.__str__()
@@ -199,9 +214,7 @@ class ZhDate:
 
     @staticmethod
     def __tiandi(anum):
-        tian = "甲乙丙丁戊己庚辛壬癸"
-        di = "子丑寅卯辰巳午未申酉戌亥"
-        return "{}{}".format(tian[anum % 10], di[anum % 12])
+        return "{}{}".format(TIANGAN[anum % 10], DIZHI[anum % 12])
 
     @staticmethod
     def validate(year, month, day, leap):
